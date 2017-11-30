@@ -67,6 +67,8 @@
     
     _tabSplitSize = CGSizeMake(1, 0.8);
     _needScrollingAnim = YES;
+    
+    _tabIndicatorCorner = 0;
 }
 
 @end

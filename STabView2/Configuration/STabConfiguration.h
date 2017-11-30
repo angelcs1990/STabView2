@@ -40,6 +40,11 @@ typedef NS_ENUM(NSInteger, STabIndicatorImageMode) {
 @property (nonatomic) BOOL tabIndicator;
 
 /**
+ *  下划线圆角
+ */
+@property (nonatomic) CGFloat tabIndicatorCorner;
+
+/**
  *  是否有选中遮罩块
  */
 @property (nonatomic) BOOL tabMask;

@@ -147,8 +147,8 @@
 #pragma mark -
 - (void)tabBase_SetupView
 {
-    [self addSubview:self.tabBarView];
     [self addSubview:self.tabContainter];
+    [self addSubview:self.tabBarView];
     [self addSubview:self.defaultView];
 }
 

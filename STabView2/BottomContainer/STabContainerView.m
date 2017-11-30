@@ -47,7 +47,7 @@
 - (void)tabViewRequestCallFunwithIndex:(NSInteger)index
 {
     if (self.delegate && [self.delegate respondsToSelector:@selector(tabContainer:didTapView:didTapIndex:)]) {
-        [self.delegate tabContainer:self didTapView:[self queryViewForIndex:index] didTapIndex:index];
+        [self.delegate tabContainer:self didTapView:[self queryItemForIndex:index].view didTapIndex:index];
     }
 }
 
@@ -71,7 +71,7 @@
     [self layoutIfNeeded];
 }
 
-- (UIView *)queryViewForIndex:(NSInteger)index
+- (STabItem *)queryItemForIndex:(NSInteger)index
 {
     if (index < self.arrTabItems.count) {
         return self.arrTabItems[index];

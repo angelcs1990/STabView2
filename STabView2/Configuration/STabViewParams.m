@@ -53,6 +53,17 @@
     
     _needScrollingAnim = S_Configuration.needScrollingAnim;
     
+    _tabIndicatorCorner = S_Configuration.tabIndicatorCorner;
+    
+}
+
+- (CGFloat)tabIndicatorCorner
+{
+    if (_tabIndicatorCorner > self.tabIndicatorHeight) {
+        _tabIndicatorCorner = self.tabIndicatorHeight / 2.0f;
+    }
+    
+    return _tabIndicatorCorner;
 }
 
 @end
@@ -102,5 +113,7 @@
         self.tabIndicatorEqualTitleWidth = NO;
     }
 }
+
+
 
 @end

@@ -36,6 +36,11 @@
 @property (nonatomic) BOOL tabIndicator;
 
 /**
+ *  下划线圆角
+ */
+@property (nonatomic) CGFloat tabIndicatorCorner;
+
+/**
  *  是否需要滚动动画（默认：YES)
  */
 @property (nonatomic) BOOL needScrollingAnim;

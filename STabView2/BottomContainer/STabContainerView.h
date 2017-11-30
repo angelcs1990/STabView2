@@ -25,6 +25,6 @@
 
 - (void)removeTabPage:(NSInteger)pageIdx;
 
-- (UIView *)queryViewForIndex:(NSInteger)index;
+- (STabItem *)queryItemForIndex:(NSInteger)index;
 
 @end

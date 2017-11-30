@@ -77,12 +77,12 @@
 #pragma mark -
 - (UIView *)currentView
 {
-    return [((STabContainerView *)self.tabViewContainer) queryViewForIndex:self.tabBarView.currentIndex];
+    return [((STabContainerView *)self.tabViewContainer) queryItemForIndex:self.tabBarView.currentIndex].view;
 }
 
 - (UIView *)preView
 {
-    return [self.tabViewContainer queryViewForIndex:self.tabBarView.preIndex];
+    return [self.tabViewContainer queryItemForIndex:self.tabBarView.preIndex].view;
 }
 
 - (STabContainerView *)tabViewContainer

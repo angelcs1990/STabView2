@@ -284,7 +284,7 @@
     self.backgroundColor = [UIColor whiteColor];
     
     self.scrollviewHeader.clipsToBounds = NO;
-    self.clipsToBounds = YES;
+//    self.clipsToBounds = YES;   忘记当时为什么要加这个了
     self.scrollHeaderContainer.clipsToBounds = YES;
     
     [self addSubview:self.scrollHeaderBackContainer];
@@ -323,6 +323,11 @@
     }
     
     self.selectedView.frame = CGRectMake(realCurIndex * perWidth + (realCurIndex * splitWidth), self.params.tabTopOffset, perWidth,  self.params.tabHeight + self.params.tabIndicatorHeight);
+    
+    if (self.params.tabIndicatorCorner > 0) {
+        self.imageViewLine.layer.cornerRadius = self.params.tabIndicatorCorner;
+    }
+    
     //下划线
     if (self.tabWidthType == STabTitleWidthFixed && ((STabViewFixedParams *)self.params).tabIndicatorWidth > 1) {
         if (self.params.tabIndicatorOffsetY != -1) {
