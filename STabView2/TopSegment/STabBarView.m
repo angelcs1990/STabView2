@@ -142,7 +142,7 @@
 
     [self addTabButtonWithIndex:self.arrTabItems.count - 1];
     
-    [self.scrollviewHeader bringSubviewToFront:self.selectedView];
+    [self.scrollviewHeader bringSubviewToFront:self.imageViewLine];
     [self addSplitLines];
     
     [self setNeedsLayout];
@@ -291,7 +291,7 @@
     [self.scrollHeaderBackContainer addSubview:self.scrollHeaderContainer];
     [self.scrollHeaderContainer addSubview:self.scrollviewHeader];
     [self.scrollviewHeader addSubview:self.selectedView];
-    [self.selectedView addSubview:self.imageViewLine];
+    [self.scrollviewHeader addSubview:self.imageViewLine];
 }
 
 - (void)makeScrollHeaderFrame
@@ -329,23 +329,24 @@
     }
     
     //下划线
+    CGFloat lineXPos = self.selectedView.frame.origin.x;
     if (self.tabWidthType == STabTitleWidthFixed && ((STabViewFixedParams *)self.params).tabIndicatorWidth > 1) {
         if (self.params.tabIndicatorOffsetY != -1) {
-            self.imageViewLine.frame = CGRectMake(0, self.params.tabIndicatorOffsetY, ((STabViewFixedParams *)self.params).tabIndicatorWidth, self.params.tabIndicatorHeight);
+            self.imageViewLine.frame = CGRectMake(lineXPos, self.params.tabIndicatorOffsetY, ((STabViewFixedParams *)self.params).tabIndicatorWidth, self.params.tabIndicatorHeight);
         } else {
-            self.imageViewLine.frame = CGRectMake(0, self.params.tabTopOffset + self.params.tabHeight, ((STabViewFixedParams *)self.params).tabIndicatorWidth, self.params.tabIndicatorHeight);
+            self.imageViewLine.frame = CGRectMake(lineXPos, self.params.tabTopOffset + self.params.tabHeight, ((STabViewFixedParams *)self.params).tabIndicatorWidth, self.params.tabIndicatorHeight);
         }
         
         CGFloat xPos, yPos;
-        xPos = self.selectedView.frame.size.width / 2.f;
+        xPos = lineXPos + self.selectedView.frame.size.width / 2.f;
         yPos = self.imageViewLine.center.y;
         CGPoint centerPt = CGPointMake(xPos, yPos);
         self.imageViewLine.center = centerPt;
     } else {
         if (self.params.tabIndicatorOffsetY != -1) {
-            self.imageViewLine.frame = CGRectMake(0, self.params.tabIndicatorOffsetY, self.selectedView.frame.size.width, self.params.tabIndicatorHeight);
+            self.imageViewLine.frame = CGRectMake(lineXPos, self.params.tabIndicatorOffsetY, self.selectedView.frame.size.width, self.params.tabIndicatorHeight);
         } else {
-            self.imageViewLine.frame = CGRectMake(0, self.params.tabTopOffset + self.params.tabHeight, self.selectedView.frame.size.width, self.params.tabIndicatorHeight);
+            self.imageViewLine.frame = CGRectMake(lineXPos, self.params.tabTopOffset + self.params.tabHeight, self.selectedView.frame.size.width, self.params.tabIndicatorHeight);
         }
     }
     
@@ -362,7 +363,9 @@
         }
         
         self.selectedView.frame = CGRectMake(offsetX + (perWidth - fontSize.width) / 2.0 + (realCurIndex * splitWidth), rectSelectedView.origin.y, fontSize.width, rectSelectedView.size.height);
-        self.imageViewLine.frame = CGRectMake(0, rectImageViewLine.origin.y, self.selectedView.frame.size.width, rectImageViewLine.size.height);
+        
+        lineXPos = self.selectedView.frame.origin.x;
+        self.imageViewLine.frame = CGRectMake(lineXPos, rectImageViewLine.origin.y, self.selectedView.frame.size.width, rectImageViewLine.size.height);
     }
 }
 
@@ -484,7 +487,7 @@
             STabItem *item = [self.arrTabItems objectAtIndex:currentIndex];
             currentTitleWidth = [item.title sizeWithAttributes:@{NSFontAttributeName:item.titleNormalFont}].width;
         }
-        if ([self.params isKindOfClass:[STabViewEqualParams class]]) {
+        if ([self.params isKindOfClass:[STabViewEqualParams class]] || [self.params isKindOfClass:[STabViewFixedParams class]]) {
             tagCMargin = (btn.frame.size.width - currentTitleWidth) / 2.0f;
             tagNMargin = (nextBtn.frame.size.width - nextTitleWidth) / 2.0f;
         }
@@ -499,6 +502,12 @@
     CGFloat maskWidth = currentTitleWidth - (currentTitleWidth - nextTitleWidth) * (pos - currentIndex);
     rect.size.width = maskWidth;
     
+//    CGFloat xPos, yPos;
+//    xPos = lineXPos + self.selectedView.frame.size.width / 2.f;
+//    yPos = self.imageViewLine.center.y;
+//    CGPoint centerPt = CGPointMake(xPos, yPos);
+//    self.imageViewLine.center = centerPt;
+//    imageViewLineRect.origin.x += rect.origin.x;
     //如果有下划线，显示
     if (self.params.tabIndicator) {
         if (self.tabWidthType == STabTitleWidthFixed && ((STabViewFixedParams *)self.params).tabIndicatorWidth > 1) {
@@ -507,6 +516,8 @@
             imageViewLineRect.size.width = maskWidth;
         }
     }
+    
+    imageViewLineRect.origin.x = rect.origin.x + (rect.size.width - imageViewLineRect.size.width) / 2.0f;
     
     _bRemoveAction = NO;
     *maskFrame = rect;
@@ -603,7 +614,7 @@
     for (int i = 0; i < self.arrTabItems.count; ++i) {
         [self addTabButtonWithIndex:i];
     }
-    [self.scrollviewHeader bringSubviewToFront:self.selectedView];
+    [self.scrollviewHeader bringSubviewToFront:self.imageViewLine];
 }
 
 - (void)addTabButtonWithIndex:(NSInteger)tagIndex

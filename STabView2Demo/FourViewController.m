@@ -39,17 +39,18 @@
     STabView2 *tabView = [STabView2 tabViewWithFrame:CGRectMake(0, 64, self.view.bounds.size.width, self.view.bounds.size.height - 64) defaultView:viewDefault];
     [self.view addSubview:tabView];
     
-    STabViewParams *params = [STabViewAutoParams tabViewParams];
-    
+    STabViewParams *params = [STabViewFixedParams tabViewParams];
+    ((STabViewFixedParams*)params).tabWidth = 100;
+//    ((STabViewFixedParams*)params).tabIndicatorWidth = 50;
     params.tabindicatorBackgroundOffset = 0.0;
     params.tabHeight = 33;
     //去掉下划线
 //    params.tabIndicator = NO;
     //是否需要遮罩块 NO没有，yes有
-    params.tabMask = NO;
+    params.tabMask = YES;
     params.tabMaskColor = [UIColor yellowColor];
     //是否填充满一屏幕宽度
-    ((STabViewAutoParams*)params).titleAutoFill = NO;
+//    ((STabViewAutoParams*)params).titleAutoFill = NO;
 //    params.tabIndicatorEqualTitleWidth = NO;
     //左边偏移
     params.tabLeftMargin = 20;
@@ -99,7 +100,8 @@
 //                            item.title = @"ss";
 //            item;});
         
-        [tabView setTabItems:@[itemHot, itemHot1, itemHot2, SItem(params, @"出错", view1)]];
+//        [tabView setTabItems:@[itemHot, itemHot1, itemHot2, SItem(params, @"出错", view1)]];
+        [tabView setTabItems:@[itemHot, itemHot1]];
     
 //        [tabView moveInitPage:2];
 //        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
