@@ -49,6 +49,9 @@
 {
     if (_titleSelectedFont == nil) {
         _titleSelectedFont = self.params.tabTitleSelectedFont;
+        if (_titleSelectedFont == nil) {
+            _titleSelectedFont = self.params.tabTitleFont;
+        }
     }
     
     return _titleSelectedFont;

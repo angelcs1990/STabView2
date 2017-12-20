@@ -83,7 +83,7 @@
 
         
         STabItem *itemHot1 = [STabItem tabItemWithParam:params];
-        itemHot1.title = @"中国陈";
+        itemHot1.title = @"中";
         itemHot1.view = view2;
         itemHot1.titleSelectedColor = [UIColor yellowColor];
         itemHot1.backgroundColor = [UIColor orangeColor];
@@ -101,19 +101,19 @@
 //            item;});
         
 //        [tabView setTabItems:@[itemHot, itemHot1, itemHot2, SItem(params, @"出错", view1)]];
-        [tabView setTabItems:@[itemHot, itemHot1]];
+        [tabView setTabItems:@[itemHot, itemHot1, itemHot2]];
     
-//        [tabView moveInitPage:2];
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            STabItem *itemHot2 = [STabItem tabItemWithParam:params];
-//            itemHot2.title = @"水电费";
-//            itemHot2.view = view3;
-//            itemHot2.titleSelectedColor = [UIColor greenColor];
+        [tabView moveInitPage:2];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            STabItem *itemHot2 = [STabItem tabItemWithParam:params];
+            itemHot2.title = @"水电费";
+            itemHot2.view = view3;
+            itemHot2.titleSelectedColor = [UIColor greenColor];
 //            [tabView addTabItem:itemHot2];
-////            [tabView removeTabPage:1];
-//
-//
-//        });
+            [tabView removeTabPage:2];
+
+
+        });
     });
     
     

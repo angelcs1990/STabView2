@@ -21,7 +21,7 @@
 
 @property (nonatomic, strong) NSMutableArray *arrTabItems;
 
-@property (nonatomic, strong) NSMutableArray *titleWidths;
+@property (nonatomic, strong) NSMutableArray *arrItemWidths;
 
 @property (nonatomic, strong) NSMutableArray *splitsArray;
 
@@ -32,6 +32,9 @@
 @property (nonatomic, readwrite) NSInteger currentIndex;
 
 @property (nonatomic, readwrite) NSInteger preIndex;
+
+@property (nonatomic, strong) NSMutableDictionary *dictRealTitlesWidth;
+@property (nonatomic, strong) NSMutableDictionary *dictRealTitlesSelWidth;
 
 @end
 
@@ -178,7 +181,8 @@
     //去掉相应的分割线
     [self addSplitLines];
     
-    [self.titleWidths removeObjectAtIndex:idx];
+    [self.arrItemWidths removeObjectAtIndex:idx];
+    [self.dictRealTitlesWidth removeObjectForKey:@(idx)];
     _titlesWidth = 0;
     
     if (self.currentIndex >= self.arrTabItems.count) {
@@ -192,15 +196,15 @@
 }
 
 #pragma mark - 私有方法
-- (CGFloat)calcAllTitlesWidth
+- (CGFloat)calcAllItemWidth
 {
     //总的title长度
     if (_titlesWidth != 0) {
         return _titlesWidth;
     }
     
-    for (int i = 0; i < self.titleWidths.count; ++i) {
-        _titlesWidth += [self.titleWidths[i] floatValue];
+    for (int i = 0; i < self.arrItemWidths.count; ++i) {
+        _titlesWidth += [self.arrItemWidths[i] floatValue];
     }
     
     return _titlesWidth;
@@ -222,6 +226,15 @@
         splitWidth = self.params.tabSplitSize.width;
     }
     
+    //计算字体大小
+    for (int i = 0; i < self.arrTabItems.count; ++i) {
+        STabItem *item = [self.arrTabItems objectAtIndex:i];
+        CGSize fontSize = [item.title sizeWithAttributes:@{NSFontAttributeName:item.titleNormalFont}];
+        self.dictRealTitlesWidth[@(i)] = [NSNumber numberWithFloat:fontSize.width];
+        fontSize = [item.title sizeWithAttributes:@{NSFontAttributeName:item.titleSelectedFont}];
+        self.dictRealTitlesSelWidth[@(i)] = [NSNumber numberWithFloat:fontSize.width];
+    }
+    
     //分割线数量
     NSInteger splitCount = self.arrTabItems.count - 1;
     switch (self.tabWidthType) {
@@ -229,7 +242,7 @@
         {
             CGFloat tmpWidth = ((STabViewFixedParams *)self.params).tabWidth - (splitWidth * splitCount) / self.arrTabItems.count;
             for (int i = 0; i < self.arrTabItems.count; ++i) {
-                self.titleWidths[i] = [NSNumber numberWithFloat:tmpWidth];
+                self.arrItemWidths[i] = [NSNumber numberWithFloat:tmpWidth];
             }
         }
             break;
@@ -241,15 +254,15 @@
                 CGSize fontSize = [item.title sizeWithAttributes:@{NSFontAttributeName:item.titleNormalFont}];
                 CGFloat tmpWidth = (fontSize.width + ((STabViewAutoParams *)self.params).tabMargin * 2);
                 totalWidth += tmpWidth;
-                self.titleWidths[i] = [NSNumber numberWithFloat:tmpWidth];
+                self.arrItemWidths[i] = [NSNumber numberWithFloat:tmpWidth];
             }
             
             if (((STabViewAutoParams *)self.params).titleAutoFill) {
                 if (totalWidth < viewWidth) {
-                    CGFloat perMarginWidth = (viewWidth - totalWidth) / self.titleWidths.count;
-                    for (int i = 0; i < self.titleWidths.count; ++i) {
-                        CGFloat tmp = [self.titleWidths[i] floatValue];
-                        self.titleWidths[i] = [NSNumber numberWithFloat:(tmp + perMarginWidth)];
+                    CGFloat perMarginWidth = (viewWidth - totalWidth) / self.arrItemWidths.count;
+                    for (int i = 0; i < self.arrItemWidths.count; ++i) {
+                        CGFloat tmp = [self.arrItemWidths[i] floatValue];
+                        self.arrItemWidths[i] = [NSNumber numberWithFloat:(tmp + perMarginWidth)];
                     }
                     perMarginWidth = (perMarginWidth / 2.0);
                     ((STabViewAutoParams *)self.params).tabMargin += perMarginWidth;
@@ -262,7 +275,7 @@
         {
             CGFloat tmpWidth = (viewWidth - splitWidth * splitCount) / self.arrTabItems.count;
             for (int i = 0; i < self.arrTabItems.count; ++i) {
-                self.titleWidths[i] = [NSNumber numberWithFloat:tmpWidth];;
+                self.arrItemWidths[i] = [NSNumber numberWithFloat:tmpWidth];;
             }
         }
             break;
@@ -300,7 +313,7 @@
     //是否有左右间隔
     viewWidth -= (self.params.tabRightMargin + self.params.tabLeftMargin);
     //按钮数量 X 按钮宽度 ＝ 所需宽度
-    CGFloat totalWidth = [self calcAllTitlesWidth];
+    CGFloat totalWidth = [self calcAllItemWidth];
     self.scrollviewHeader.frame = CGRectMake(0, /*64*/0, viewWidth, self.params.tabTopOffset + self.params.tabHeight +  self.params.tabindicatorBackgroundOffset);
     self.scrollviewHeader.contentSize = CGSizeMake(totalWidth, 0);
     self.scrollHeaderContainer.frame = CGRectMake(self.params.tabLeftMargin, 0, viewWidth, self.scrollviewHeader.frame.size.height  + self.params.tabIndicatorBackgroundHeight);
@@ -318,8 +331,8 @@
     
     //每个按钮的宽度
     CGFloat perWidth = 0;
-    if (self.titleWidths.count > realCurIndex) {
-        perWidth = [self.titleWidths[realCurIndex] floatValue];
+    if (self.arrItemWidths.count > realCurIndex) {
+        perWidth = [self.arrItemWidths[realCurIndex] floatValue];
     }
     
     self.selectedView.frame = CGRectMake(realCurIndex * perWidth + (realCurIndex * splitWidth), self.params.tabTopOffset, perWidth,  self.params.tabHeight + self.params.tabIndicatorHeight);
@@ -353,16 +366,20 @@
     //下划线是否跟随字体一样宽度
     if (self.params.tabIndicatorEqualTitleWidth == YES) {
         STabItem *item = self.arrTabItems[realCurIndex];
-        CGSize fontSize = [item.title sizeWithAttributes:@{NSFontAttributeName:item.titleNormalFont}];
+//        CGSize fontSize = [item.title sizeWithAttributes:@{NSFontAttributeName:item.titleNormalFont}];
+        CGFloat titleWidth = [[self.dictRealTitlesWidth objectForKey:@(realCurIndex)] floatValue];
+        if (item.titleSelectedFont) {
+            titleWidth = [[self.dictRealTitlesSelWidth objectForKey:@(realCurIndex)] floatValue];
+        }
         CGRect rectSelectedView = self.selectedView.frame;
         CGRect rectImageViewLine = self.imageViewLine.frame;
         
         CGFloat offsetX = 0;
         for (int i = 0; i < realCurIndex; ++i) {
-            offsetX += [self.titleWidths[i] floatValue];
+            offsetX += [self.arrItemWidths[i] floatValue];
         }
         
-        self.selectedView.frame = CGRectMake(offsetX + (perWidth - fontSize.width) / 2.0 + (realCurIndex * splitWidth), rectSelectedView.origin.y, fontSize.width, rectSelectedView.size.height);
+        self.selectedView.frame = CGRectMake(offsetX + (perWidth - titleWidth) / 2.0 + (realCurIndex * splitWidth), rectSelectedView.origin.y, titleWidth, rectSelectedView.size.height);
         
         lineXPos = self.selectedView.frame.origin.x;
         self.imageViewLine.frame = CGRectMake(lineXPos, rectImageViewLine.origin.y, self.selectedView.frame.size.width, rectImageViewLine.size.height);
@@ -383,7 +400,7 @@
         if (button == nil) {
             break;
         }
-        CGFloat tmpPerWidth = [self.titleWidths[i] floatValue];
+        CGFloat tmpPerWidth = [self.arrItemWidths[i] floatValue];
         if (i == self.currentIndex) {
             [self updateButton:button withStatus:YES];
         }
@@ -394,7 +411,7 @@
     titleBtnOffsetX = 0.0f;
     for (int idx = 0; idx < self.splitsArray.count; ++idx) {
         UIView *tmpView = self.splitsArray[idx];
-        CGFloat tmpPerWidth = [self.titleWidths[idx] floatValue];
+        CGFloat tmpPerWidth = [self.arrItemWidths[idx] floatValue];
         titleBtnOffsetX += tmpPerWidth;
         
         CGFloat splitHeight = (self.scrollviewHeader.frame.size.height - tmpView.frame.size.height) / 2.0;
@@ -411,11 +428,11 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(tabBar:willTapIndex:)]) {
         [self.delegate tabBar:self willTapIndex:currentIndex];
     }
-    
-    if (self.thirdParty) {
-        //如果是单独使用就移动
-        [self moveTabIndex:currentIndex];
-    }
+[self moveTabIndex:currentIndex];
+//    if (self.thirdParty) {
+//        //如果是单独使用就移动
+//        [self moveTabIndex:currentIndex];
+//    }
 }
 
 - (void)setParams:(STabViewParams *)params
@@ -481,33 +498,46 @@
     }
     
     if (self.params.tabIndicatorEqualTitleWidth) {
-        nextTitleWidth = nextBtn.titleLabel.frame.size.width;
-        currentTitleWidth = btn.titleLabel.frame.size.width;
-        if (_bRemoveAction || (nextBtn == btn)) {
-            STabItem *item = [self.arrTabItems objectAtIndex:currentIndex];
-            currentTitleWidth = [item.title sizeWithAttributes:@{NSFontAttributeName:item.titleNormalFont}].width;
+//        nextTitleWidth = nextBtn.titleLabel.frame.size.width;
+//        currentTitleWidth = btn.titleLabel.frame.size.width;
+        STabItem *itemC = [self.arrTabItems objectAtIndex:currentIndex];
+        if (itemC.titleSelectedFont) {
+            currentTitleWidth = [[self.dictRealTitlesSelWidth objectForKey:@(currentIndex)] floatValue];
+        } else {
+            currentTitleWidth = [[self.dictRealTitlesWidth objectForKey:@(currentIndex)] floatValue];
         }
-        if ([self.params isKindOfClass:[STabViewEqualParams class]] || [self.params isKindOfClass:[STabViewFixedParams class]]) {
-            tagCMargin = (btn.frame.size.width - currentTitleWidth) / 2.0f;
-            tagNMargin = (nextBtn.frame.size.width - nextTitleWidth) / 2.0f;
+        
+        STabItem *itemN = [self.arrTabItems objectAtIndex:nextIndex];
+        nextTitleWidth = [[self.dictRealTitlesWidth objectForKey:@(nextIndex)] floatValue];
+        
+        if (nextBtn != btn) {
+            if (itemN.titleSelectedFont) {
+                nextTitleWidth = [[self.dictRealTitlesSelWidth objectForKey:@(nextIndex)] floatValue];
+            }
+            
         }
+//        if (_bRemoveAction || (nextBtn == btn)) {
+//            STabItem *item = [self.arrTabItems objectAtIndex:currentIndex];
+//            currentTitleWidth = [item.title sizeWithAttributes:@{NSFontAttributeName:item.titleNormalFont}].width;
+//        }
+//        if ([self.params isKindOfClass:[STabViewEqualParams class]] || [self.params isKindOfClass:[STabViewFixedParams class]]) {
+//            tagCMargin = (btn.frame.size.width - currentTitleWidth) / 2.0f;
+//            tagNMargin = (nextBtn.frame.size.width - nextTitleWidth) / 2.0f;
+//        }
+        tagCMargin = (btn.frame.size.width - currentTitleWidth) / 2.0f;
+        tagNMargin = (nextBtn.frame.size.width - nextTitleWidth) / 2.0f;
         
         rect.origin.x = btn.frame.origin.x + tagCMargin + ((nextBtn.frame.origin.x + tagNMargin) - (btn.frame.origin.x + tagCMargin)) * (pos - currentIndex);
     } else {
-        nextTitleWidth = [self.titleWidths[nextIndex] floatValue];
-        currentTitleWidth = [self.titleWidths[currentIndex] floatValue];
+        nextTitleWidth = [self.arrItemWidths[nextIndex] floatValue];
+        currentTitleWidth = [self.arrItemWidths[currentIndex] floatValue];
         rect.origin.x = btn.frame.origin.x + ((nextBtn.frame.origin.x) - (btn.frame.origin.x )) * (pos - currentIndex);
     }
     
     CGFloat maskWidth = currentTitleWidth - (currentTitleWidth - nextTitleWidth) * (pos - currentIndex);
     rect.size.width = maskWidth;
     
-//    CGFloat xPos, yPos;
-//    xPos = lineXPos + self.selectedView.frame.size.width / 2.f;
-//    yPos = self.imageViewLine.center.y;
-//    CGPoint centerPt = CGPointMake(xPos, yPos);
-//    self.imageViewLine.center = centerPt;
-//    imageViewLineRect.origin.x += rect.origin.x;
+
     //如果有下划线，显示
     if (self.params.tabIndicator) {
         if (self.tabWidthType == STabTitleWidthFixed && ((STabViewFixedParams *)self.params).tabIndicatorWidth > 1) {
@@ -795,13 +825,31 @@
     return _arrTabItems;
 }
 
-- (NSMutableArray *)titleWidths
+- (NSMutableDictionary *)dictRealTitlesWidth
 {
-    if (_titleWidths == nil) {
-        _titleWidths = [NSMutableArray array];
+    if (_dictRealTitlesWidth == nil) {
+        _dictRealTitlesWidth = [NSMutableDictionary dictionary];
     }
     
-    return _titleWidths;
+    return _dictRealTitlesWidth;
+}
+
+- (NSMutableDictionary *)dictRealTitlesSelWidth
+{
+    if (_dictRealTitlesSelWidth == nil) {
+        _dictRealTitlesSelWidth = [NSMutableDictionary dictionary];
+    }
+    
+    return _dictRealTitlesSelWidth;
+}
+
+- (NSMutableArray *)arrItemWidths
+{
+    if (_arrItemWidths == nil) {
+        _arrItemWidths = [NSMutableArray array];
+    }
+    
+    return _arrItemWidths;
 }
 
 - (NSMutableArray *)splitsArray

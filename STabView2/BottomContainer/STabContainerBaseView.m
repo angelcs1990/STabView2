@@ -19,6 +19,9 @@
 @end
 
 @implementation STabContainerBaseView
+{
+    BOOL _bScrolling;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -67,6 +70,8 @@
 
 - (void)_callFun:(NSInteger)index
 {
+    _bScrolling = NO;
+    self.autoMove = 0;
     if (self.protocol && [self.protocol respondsToSelector:@selector(tabViewRequestCallFunwithIndex:)]) {
         [self.protocol tabViewRequestCallFunwithIndex:index];
     }
@@ -74,8 +79,9 @@
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    _bScrolling = (scrollView.dragging ? YES : _bScrolling);
     CGFloat index = scrollView.contentOffset.x / scrollView.frame.size.width;
-    if (self.delegate) {
+    if (self.delegate && _bScrolling) {
         [self.delegate tabContainer:self atPosition:index];
     }
 }
@@ -93,7 +99,11 @@
     CGPoint point = self.scrollContentView.contentOffset;
     point.x = currentTab * self.scrollContentView.frame.size.width;
     
-    [self.scrollContentView setContentOffset:point animated:self.scrollingNeedAnim];
+    if (self.autoMove != 0) {
+        [self.scrollContentView setContentOffset:point animated:(self.autoMove == 1) ? YES : NO];
+    } else {
+        [self.scrollContentView setContentOffset:point animated:self.scrollingNeedAnim];
+    }
 }
 
 - (UIScrollView *)scrollContentView

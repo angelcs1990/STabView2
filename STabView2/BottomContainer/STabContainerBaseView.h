@@ -52,6 +52,10 @@
 
 @property (nonatomic) BOOL scrollingNeedAnim;
 
+//0 :no 1:YES and anim 2:YES and No anim
+@property (nonatomic) NSInteger autoMove;
+
+
 - (void)_callFun:(NSInteger)index;
 
 - (void)updateCurrentTab:(NSInteger)tab;

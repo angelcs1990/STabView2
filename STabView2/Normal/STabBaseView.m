@@ -63,11 +63,13 @@
 
 - (void)moveInitPage:(NSInteger)index
 {
+    self.tabContainter.autoMove = 0;
     [self moveToIndex:index animation:NO];
 }
 
 - (void)moveToIndex:(NSInteger)index animation:(BOOL)ani
 {
+    self.tabContainter.autoMove = (ani ? 1 : 2);
     [self tabBar:self.tabBarView willTapIndex:index];
     if (ani) {
         [self.tabBarView moveTabIndex:index];
