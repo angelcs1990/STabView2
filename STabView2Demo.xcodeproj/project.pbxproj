@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		400A548620D8DF1600786E4B /* DemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A548520D8DF1600786E4B /* DemoViewController.m */; };
 		4516EF781FD927840046D54B /* TwoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4516EF771FD927840046D54B /* TwoViewController.m */; };
 		451D67171FC3D420003278BE /* STabItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 451D67161FC3D420003278BE /* STabItem.m */; };
 		4551B6831E8DF8940021DEC4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4551B6821E8DF8940021DEC4 /* main.m */; };
@@ -32,6 +33,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		400A548420D8DF1600786E4B /* DemoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoViewController.h; sourceTree = "<group>"; };
+		400A548520D8DF1600786E4B /* DemoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoViewController.m; sourceTree = "<group>"; };
 		4516EF761FD927840046D54B /* TwoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TwoViewController.h; sourceTree = "<group>"; };
 		4516EF771FD927840046D54B /* TwoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TwoViewController.m; sourceTree = "<group>"; };
 		451D67151FC3D420003278BE /* STabItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STabItem.h; sourceTree = "<group>"; };
@@ -117,6 +120,8 @@
 				4551B6C11E8E032C0021DEC4 /* OneViewController.m */,
 				4516EF761FD927840046D54B /* TwoViewController.h */,
 				4516EF771FD927840046D54B /* TwoViewController.m */,
+				400A548420D8DF1600786E4B /* DemoViewController.h */,
+				400A548520D8DF1600786E4B /* DemoViewController.m */,
 				4551B6BD1E8DFE040021DEC4 /* CellView.h */,
 				4551B6BE1E8DFE040021DEC4 /* CellView.m */,
 				4551B68A1E8DF8940021DEC4 /* Main.storyboard */,
@@ -281,6 +286,7 @@
 				4551B6BF1E8DFE040021DEC4 /* CellView.m in Sources */,
 				4551B6891E8DF8940021DEC4 /* ViewController.m in Sources */,
 				4516EF781FD927840046D54B /* TwoViewController.m in Sources */,
+				400A548620D8DF1600786E4B /* DemoViewController.m in Sources */,
 				455FF0761EEA79CA000C9DBA /* STabContainerBaseView.m in Sources */,
 				455FF07F1EEA79CA000C9DBA /* SReuseTabViewFlowLayout.m in Sources */,
 				455FF07C1EEA79CA000C9DBA /* STabView2.m in Sources */,

@@ -20,8 +20,8 @@
     [super viewDidLoad];
     
     
-    NSArray *arrayData = @[@"跳转普通选项卡", @"跳转复用选项卡", @"跳转有缺省界面"];
-    self.arrayClasses = @[NSClassFromString(@"FourViewController"), NSClassFromString(@"OneViewController"), NSClassFromString(@"TwoViewController")];
+    NSArray *arrayData = @[@"跳转普通选项卡", @"跳转复用选项卡", @"跳转有缺省界面", @"Demo"];
+    self.arrayClasses = @[NSClassFromString(@"FourViewController"), NSClassFromString(@"OneViewController"), NSClassFromString(@"TwoViewController"), NSClassFromString(@"DemoViewController")];
     
     for (int i = 0; i < arrayData.count; ++i) {
         [self createButtonWithTitle:arrayData[i] andFrame:CGRectMake(30, 70 + (i * 45), 140, 45)];

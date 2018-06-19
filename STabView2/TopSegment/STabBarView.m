@@ -497,7 +497,7 @@
         tagNMargin = tagCMargin = ((STabViewAutoParams *)self.params).tabMargin;
     }
     
-    if (self.params.tabIndicatorEqualTitleWidth) {
+    if (self.params.tabIndicatorEqualTitleWidth && self.tabWidthType == STabTitleWidthAuto) {
 //        nextTitleWidth = nextBtn.titleLabel.frame.size.width;
 //        currentTitleWidth = btn.titleLabel.frame.size.width;
         STabItem *itemC = [self.arrTabItems objectAtIndex:currentIndex];

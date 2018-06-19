@@ -21,6 +21,8 @@
 - (UIColor *)titleNormalColor
 {
     if (_titleNormalColor == nil) {
+        NSString *ttmp = [NSString stringWithFormat:@"%@:%s", @"", __func__];
+        NSAssert(self.params, ttmp);
         _titleNormalColor = self.params.tabTitleNormalColor;
     }
     
@@ -30,6 +32,8 @@
 - (UIColor *)titleSelectedColor
 {
     if (_titleSelectedColor == nil) {
+        NSString *ttmp = [NSString stringWithFormat:@"%@:%s", @"", __func__];
+        NSAssert(self.params, ttmp);
         _titleSelectedColor = self.params.tabTitleSelectColor;
     }
     
@@ -39,6 +43,8 @@
 - (UIFont *)titleNormalFont
 {
     if (_titleNormalFont == nil) {
+        NSString *ttmp = [NSString stringWithFormat:@"%@:%s", @"", __func__];
+        NSAssert(self.params, ttmp);
         _titleNormalFont = self.params.tabTitleFont;
     }
     
@@ -48,6 +54,8 @@
 - (UIFont *)titleSelectedFont
 {
     if (_titleSelectedFont == nil) {
+        NSString *ttmp = [NSString stringWithFormat:@"%@:%s", @"", __func__];
+        NSAssert(self.params, ttmp);
         _titleSelectedFont = self.params.tabTitleSelectedFont;
         if (_titleSelectedFont == nil) {
             _titleSelectedFont = self.params.tabTitleFont;

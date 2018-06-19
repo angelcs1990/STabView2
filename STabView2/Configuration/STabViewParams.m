@@ -81,6 +81,9 @@
 
 @end
 
+
+
+#define _STabViewFixed_Default_Width (320 / 3.0f)
 @implementation STabViewFixedParams
 
 - (void)setupValue
@@ -95,7 +98,9 @@
     if (self.tabIndicatorWidth > 1 && _tabWidth < self.tabIndicatorWidth) {
         self.tabIndicatorWidth = _tabWidth;
     }
-    
+    if (_tabWidth <= 0) {
+        _tabWidth = _STabViewFixed_Default_Width;
+    }
     return _tabWidth;
 }
 
